@@ -1,0 +1,15 @@
+Build.PL
+Changes
+lib/List/ToHumanString.pm
+MANIFEST	
+README
+LICENSE
+t/00-load.t
+t/01-humanize-default-export.t
+t/02-humanize-extra-export.t
+xt/kwalitee.t
+xt/pod-coverage.t
+xt/pod.t
+Makefile.PL
+META.yml
+META.json
