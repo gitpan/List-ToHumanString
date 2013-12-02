@@ -1,5 +1,8 @@
 Revision history for List-ToHumanString
 
+0.003   2013-12-01
+        - Removed the broken GIT link from the POD
+
 0.002   2013-12-01
         - Made the module remove empty and blank string along with
           undefs, since there's no need for those either.

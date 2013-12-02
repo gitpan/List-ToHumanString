@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT    = qw(to_human_string);
@@ -159,11 +159,6 @@ C<to_human_string()>, to save on typing.
 =head1 AUTHOR
 
 Zoffix Znet, C<< <zoffix at cpan.org> >>
-
-=head1 GIT
-
-This module is on GitHub:
-L<https://github.com/zoffixznet/List-ToHumanString.git>
 
 =head1 BUGS
 

@@ -99,10 +99,6 @@ OPTIONAL EXPORTS
 AUTHOR
     Zoffix Znet, "<zoffix at cpan.org>"
 
-GIT
-    This module is on GitHub:
-    <https://github.com/zoffixznet/List-ToHumanString.git>
-
 BUGS
     Please report any bugs or feature requests to "bug-list-tohumanstring at
     rt.cpan.org", or through the web interface at
