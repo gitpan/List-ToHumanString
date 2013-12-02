@@ -1,5 +1,9 @@
 Revision history for List-ToHumanString
 
+0.002   2013-12-01
+        - Made the module remove empty and blank string along with
+          undefs, since there's no need for those either.
+
 0.001   2013-11-27
-        First version, released on an unsuspecting world.
+        - First version, released on an unsuspecting world.
 

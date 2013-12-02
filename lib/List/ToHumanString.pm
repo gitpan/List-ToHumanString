@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT    = qw(to_human_string);
@@ -13,8 +13,8 @@ our $Extra_Comma  = 1;
 
 sub to_human_string {
     my @list = @_;
-    
-    @list = grep defined, @list;
+
+    @list = grep defined && /\S/, @list;
 
     if ( not @list ) {
         return '';
@@ -54,44 +54,44 @@ List::ToHumanString - write lists in strings like a human would
 =head1 SYNOPSIS
 
     use List::ToHumanString;
-    
+
     printf "Report(s) for %s.\n", to_human_string qw/March May June August/;
     ## prints: Report(s) for March, May, June, and August.
-    
+
     printf "Report(s) for %s.\n", to_human_string qw/March May/;
     ## prints: Report(s) for March and May.
-    
+
     printf "Report(s) for %s.\n", to_human_string qw/March/;
     ## prints: Report(s) for March.
 
-    
+
     # Exact same thing, but with less typing, by exporting humanize or even h
     use List::ToHumanString qw/h humanize/;
-    
+
     printf "Report(s) for %s.\n", humanize qw/March May June August/;
     ## prints: Report(s) for March, May, June, and August.
-    
+
     printf "Report(s) for %s.\n", h qw/March May/;
     ## prints: Report(s) for March and May.
-    
-    
+
+
     # You can also use a simple ref-deref trick to interpolate the
     # results inside the strings:
     my $output = "Report(s) for ${\ to_human_string @items }.\n";
-    
+
 =head1 EXPORTS BY DEFAULT
-    
+
 =head2 C<to_human_string>
 
     use List::ToHumanString;
-    
+
     printf "Report(s) for %s.\n", to_human_string qw/March May June August/;
-    ## prints: Report(s) for March, May, June, and August.  
-    
+    ## prints: Report(s) for March, May, June, and August.
+
 B<Exported by default>. B<Takes> a list of items as an argument.
-B<REMOVES ALL UNDEFS>, then B<returns> a string.
+B<REMOVES ALL UNDEFS AND EMPTY AND BLANK STRING>, then B<returns> a string.
 The string format will be as follows (number of arguments below is the
-number of arguments AFTER all undefs have been removed):
+number of arguments AFTER all undefs and blanks have been removed):
 
 =head3 empty list as argument
 
@@ -104,7 +104,7 @@ Returns empty string.
 
     to_human_string('foo');
     # returns 'foo'
-    
+
     to_human_string( URI->new("http://example.com") );
     # returns 'http://example.com'
 
@@ -121,7 +121,7 @@ Returns the two arguments joined with C<' and '>
 
     to_human_string('foo', 'bar', 'ber', 'baz');
     # returns 'foo, bar, ber, and baz'
-    
+
     $List::ToHumanString::Extra_Comma = 0;
     to_human_string('foo', 'bar', 'ber', 'baz');
     # returns 'foo, bar, ber and baz'
@@ -129,30 +129,30 @@ Returns the two arguments joined with C<' and '>
 Returns a string with arguments joined with C<', '> (comma and space).
 The last element is also preceeded by word C<'and '>. B<Note:> depending
 on your stylistic preference, you might wish not to have a comma before
-the last element. You can accomplish that by setting 
+the last element. You can accomplish that by setting
 C<$List::ToHumanString::Extra_Comma> to zero.
 
 =head1 OPTIONAL EXPORTS
 
     use List::ToHumanString qw/h humanize/;
-    
+
     printf "Report(s) for %s.\n", humanize qw/March May June August/;
     ## prints: Report(s) for March, May, June, and August.
-    
+
     printf "Report(s) for %s.\n", h qw/March May/;
     ## prints: Report(s) for March and May.
-    
+
 =head2 C<humanize>
 
     printf "Report(s) for %s.\n", humanize qw/March May June August/;
-    
+
 You can optionally import C<humanize()> and use it instead of
 C<to_human_string()>, to save on typing.
 
 =head2 C<h>
 
     printf "Report(s) for %s.\n", h qw/March May June August/;
-    
+
 You can optionally import C<h()> and use it instead of
 C<to_human_string()>, to save on typing.
 

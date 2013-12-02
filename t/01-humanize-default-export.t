@@ -21,19 +21,20 @@ is(
 );
 
 is(
-    to_human_string(qw/foo bar/),
+    to_human_string(qw/foo bar/, undef, ''),
     'foo and bar',
     q{Humanize two items},
 );
 
 is(
-    to_human_string(qw/foo bar baz/),
+    to_human_string(qw/foo bar baz/, undef, ''),
     'foo, bar, and baz',
     q{Humanize three items},
 );
 
 is(
-    to_human_string(qw/foo bar baz ber/),
+    to_human_string(qw/foo bar/, undef, '', ' ', "\t",
+    qw/baz ber/, undef, ''),
     'foo, bar, baz, and ber',
     q{Humanize four items},
 );

@@ -4,7 +4,7 @@
       "Zoffix Znet <zoffix@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4202",
+   "generated_by" : "Module::Build version 0.4007, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "artistic_2"
    ],
@@ -34,7 +34,7 @@
    "provides" : {
       "List::ToHumanString" : {
          "file" : "lib/List/ToHumanString.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -43,5 +43,5 @@
          "http://www.perlfoundation.org/artistic_license_2_0"
       ]
    },
-   "version" : "0.001"
+   "version" : "0.002"
 }

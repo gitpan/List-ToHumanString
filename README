@@ -3,27 +3,27 @@ NAME
 
 SYNOPSIS
         use List::ToHumanString;
-    
+
         printf "Report(s) for %s.\n", to_human_string qw/March May June August/;
         ## prints: Report(s) for March, May, June, and August.
-    
+
         printf "Report(s) for %s.\n", to_human_string qw/March May/;
         ## prints: Report(s) for March and May.
-    
+
         printf "Report(s) for %s.\n", to_human_string qw/March/;
         ## prints: Report(s) for March.
 
-    
+
         # Exact same thing, but with less typing, by exporting humanize or even h
         use List::ToHumanString qw/h humanize/;
-    
+
         printf "Report(s) for %s.\n", humanize qw/March May June August/;
         ## prints: Report(s) for March, May, June, and August.
-    
+
         printf "Report(s) for %s.\n", h qw/March May/;
         ## prints: Report(s) for March and May.
-    
-    
+
+
         # You can also use a simple ref-deref trick to interpolate the
         # results inside the strings:
         my $output = "Report(s) for ${\ to_human_string @items }.\n";
@@ -31,14 +31,14 @@ SYNOPSIS
 EXPORTS BY DEFAULT
   "to_human_string"
         use List::ToHumanString;
-    
+
         printf "Report(s) for %s.\n", to_human_string qw/March May June August/;
         ## prints: Report(s) for March, May, June, and August.
 
     Exported by default. Takes a list of items as an argument. REMOVES ALL
-    UNDEFS, then returns a string. The string format will be as follows
-    (number of arguments below is the number of arguments AFTER all undefs
-    have been removed):
+    UNDEFS AND EMPTY AND BLANK STRING, then returns a string. The string
+    format will be as follows (number of arguments below is the number of
+    arguments AFTER all undefs and blanks have been removed):
 
    empty list as argument
         to_human_string();
@@ -49,7 +49,7 @@ EXPORTS BY DEFAULT
    1-item list as argument
         to_human_string('foo');
         # returns 'foo'
-    
+
         to_human_string( URI->new("http://example.com") );
         # returns 'http://example.com'
 
@@ -64,7 +64,7 @@ EXPORTS BY DEFAULT
    list with 3 or more items as argument
         to_human_string('foo', 'bar', 'ber', 'baz');
         # returns 'foo, bar, ber, and baz'
-    
+
         $List::ToHumanString::Extra_Comma = 0;
         to_human_string('foo', 'bar', 'ber', 'baz');
         # returns 'foo, bar, ber and baz'
@@ -77,10 +77,10 @@ EXPORTS BY DEFAULT
 
 OPTIONAL EXPORTS
         use List::ToHumanString qw/h humanize/;
-    
+
         printf "Report(s) for %s.\n", humanize qw/March May June August/;
         ## prints: Report(s) for March, May, June, and August.
-    
+
         printf "Report(s) for %s.\n", h qw/March May/;
         ## prints: Report(s) for March and May.
 
