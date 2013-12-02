@@ -1,5 +1,8 @@
 Revision history for List-ToHumanString
 
+0.004   2013-12-01
+        - Fixed a typo
+
 0.003   2013-12-01
         - Removed the broken GIT link from the POD
 

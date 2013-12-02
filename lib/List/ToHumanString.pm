@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT    = qw(to_human_string);
@@ -89,7 +89,7 @@ List::ToHumanString - write lists in strings like a human would
     ## prints: Report(s) for March, May, June, and August.
 
 B<Exported by default>. B<Takes> a list of items as an argument.
-B<REMOVES ALL UNDEFS AND EMPTY AND BLANK STRING>, then B<returns> a string.
+B<REMOVES ALL UNDEFS AND EMPTY AND BLANK STRINGS>, then B<returns> a string.
 The string format will be as follows (number of arguments below is the
 number of arguments AFTER all undefs and blanks have been removed):
 

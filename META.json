@@ -34,7 +34,7 @@
    "provides" : {
       "List::ToHumanString" : {
          "file" : "lib/List/ToHumanString.pm",
-         "version" : "0.003"
+         "version" : "0.004"
       }
    },
    "release_status" : "stable",
@@ -43,5 +43,5 @@
          "http://www.perlfoundation.org/artistic_license_2_0"
       ]
    },
-   "version" : "0.003"
+   "version" : "0.004"
 }
