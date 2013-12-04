@@ -4,14 +4,14 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.004';
+our $VERSION = '1.001';
 require Exporter;
-our @ISA = qw(Exporter);
-our @EXPORT    = qw(to_human_string);
-our @EXPORT_OK = qw(humanize  h);
-our $Extra_Comma  = 1;
+our @ISA         = qw(Exporter);
+our @EXPORT      = qw(to_human_string);
+our $Extra_Comma = 1;
+our $Separator   = '|';
 
-sub to_human_string {
+sub _combine_list_to_string {
     my @list = @_;
 
     @list = grep defined && /\S/, @list;
@@ -33,13 +33,28 @@ sub to_human_string {
     }
 }
 
-sub humanize {
-    to_human_string(@_);
+sub to_human_string {
+    my ( $string, @list ) = @_;
+    
+    @list = grep defined && /\S/, @list;
+
+    my $replacement_index = ( @list == 1 ? 0 : 1 );
+    $string=~
+    s%
+        { ( [^}]*  \Q$Separator\E  [^}]* ) }
+    %
+        ( split /\Q$Separator\E/, $1, 2 )[ $replacement_index ];
+    %gex;
+
+    my $re = qr/\Q$Separator\Elist\Q$Separator\E/;
+    if ( $string =~ /$re/ ) {
+        my $human_list = _combine_list_to_string( @list );
+        $string =~ s/$re/$human_list/g;
+    }
+    
+    return $string;
 }
 
-sub h {
-    to_human_string(@_);
-}
 
 1;
 
@@ -55,107 +70,150 @@ List::ToHumanString - write lists in strings like a human would
 
     use List::ToHumanString;
 
-    printf "Report(s) for %s.\n", to_human_string qw/March May June August/;
-    ## prints: Report(s) for March, May, June, and August.
+    print to_human_string "Report{|s} for |list|\n", qw/March May July/;
+    ## Prints "Reports for March, May, and July";
 
-    printf "Report(s) for %s.\n", to_human_string qw/March May/;
-    ## prints: Report(s) for March and May.
+    print to_human_string "Report{|s} for |list|\n", qw/March July/;
+    ## Prints "Reports for March and July";
 
-    printf "Report(s) for %s.\n", to_human_string qw/March/;
-    ## prints: Report(s) for March.
+    print to_human_string "Report{|s} {is|are} needed for |list|\n", qw/March/;
+    ## Prints "Report is needed for March";
 
+=head1 DESCRIPTION
 
-    # Exact same thing, but with less typing, by exporting humanize or even h
-    use List::ToHumanString qw/h humanize/;
-
-    printf "Report(s) for %s.\n", humanize qw/March May June August/;
-    ## prints: Report(s) for March, May, June, and August.
-
-    printf "Report(s) for %s.\n", h qw/March May/;
-    ## prints: Report(s) for March and May.
-
-
-    # You can also use a simple ref-deref trick to interpolate the
-    # results inside the strings:
-    my $output = "Report(s) for ${\ to_human_string @items }.\n";
-
+Provides a way to make it easy to prepare a string containing
+a list of items, where that string is meant to be read by a human.
+    
 =head1 EXPORTS BY DEFAULT
 
 =head2 C<to_human_string>
 
-    use List::ToHumanString;
+    print to_human_string "Report{|s} for |list|\n", qw/March May July/;
+    ## Prints "Reports for March, May, and July";
 
-    printf "Report(s) for %s.\n", to_human_string qw/March May June August/;
-    ## prints: Report(s) for March, May, June, and August.
+    print to_human_string "Report{|s} for |list|\n", qw/March July/;
+    ## Prints "Reports for March and July";
 
-B<Exported by default>. B<Takes> a list of items as an argument.
-B<REMOVES ALL UNDEFS AND EMPTY AND BLANK STRINGS>, then B<returns> a string.
-The string format will be as follows (number of arguments below is the
-number of arguments AFTER all undefs and blanks have been removed):
+    print to_human_string "Report{|s} {is|are} needed for |list|\n", qw/March/;
+    ## Prints "Report is needed for March";
 
-=head3 empty list as argument
+    print to_human_string '|list|', qw/March May July/;
+    ## Prints "March, May, and July";
 
-    to_human_string();
+    $List::ToHumanString::Separator   = '*SEP*';
+    $List::ToHumanString::Extra_Comma = 0;
+    print to_human_string "I have {one item*SEP*many items}: *SEP*list*SEP*", qw/Foo Bar Baz/;
+    ## Prints "I have many items: Foo, Bar and Baz" (note the missing comma before "and")
+
+B<Exported by default>. B<Takes> a string to "humanize" as the first argument
+and a list of items to use. 
+B<Removes all undefs and empty and blank strings> before counting the
+number of items in the list. If the list contains one item, chooses the
+"singular" variation in the first argument's format (see below). If the list
+contains any other number of items, chooses "plural" variation in the format.
+Once all the substitutions have been done, B<returns> the resultant string.
+
+=head3 first argument format
+
+    "I have {one item|many items}"
+
+    "I have {one item that is|many items that are} |list|"
+
+    "I have item{|s}: |list|"
+
+    "I have {a|} thing{|s}"
+
+    $List::ToHumanString::Separator = '::SEP::';
+    "I have {one item::SEP::many items}: ::SEP::list::SEP::",
+
+=head3 singular/plural
+
+C<to_human_string()> will replace any occurence of C<{singularSEPARATORplural}>
+with either the C<"singular"> or C<"plural"> texts, depending on the number of
+items in the list given to it. The C<"singular"> and C<"plural"> texts can
+be any text (even empty string) that doesn't have a C<SEPARATOR> in it.
+The C<SEPARATOR>
+is the value of C<$List::ToHumanString::Separator>, which B<by default>
+is a pipe character (C<|>). Regex special characters in the C<SEPARATOR>
+have no effect.
+
+=head3 humanized list
+
+    "I have item{|s}: |list|"
+
+    "I have {one item::SEP::many items}: ::SEP::list::SEP::",
+
+You can automatically insert a "humanized" list of items into your string
+by using word C<list> set off be C<SEPARATOR> string on each side.
+That string will be replaced by a "humanized" way to write the
+list of items you provided, which is as follows:
+
+=head4 empty list of items
+
+    to_human_string('|list|',);
     # returns ''
 
-Returns empty string.
+Humanized string will be: empty string.
 
-=head3 1-item list as argument
+=head4 1-item list of items
 
-    to_human_string('foo');
+    to_human_string('|list|', 'foo');
     # returns 'foo'
 
-    to_human_string( URI->new("http://example.com") );
+    to_human_string('|list|', URI->new("http://example.com") );
     # returns 'http://example.com'
 
-Returns the argument (stringified).
+Humanized string will be: the item itself (stringified).
 
-=head3 2-item list as argument
+=head4 2-item list of items
 
-    to_human_string('foo', 'bar');
+    to_human_string('|list|', 'foo', 'bar');
     # returns 'foo and bar'
 
-Returns the two arguments joined with C<' and '>
+Humanized string will be: the two items joined with C<' and '>
 
-=head3 list with 3 or more items as argument
+=head4 list with 3 or more items
 
-    to_human_string('foo', 'bar', 'ber', 'baz');
+    to_human_string('|list|', 'foo', 'bar', 'ber', 'baz');
     # returns 'foo, bar, ber, and baz'
 
     $List::ToHumanString::Extra_Comma = 0;
-    to_human_string('foo', 'bar', 'ber', 'baz');
+    to_human_string('|list|', 'foo', 'bar', 'ber', 'baz');
     # returns 'foo, bar, ber and baz'
 
-Returns a string with arguments joined with C<', '> (comma and space).
-The last element is also preceeded by word C<'and '>. B<Note:> depending
+Humanized string will be: the list of items in the list you provided
+joined with C<', '> (comma and space).
+The last element is also preceded by word C<'and '>. B<Note:> depending
 on your stylistic preference, you might wish not to have a comma before
 the last element. You can accomplish that by setting
 C<$List::ToHumanString::Extra_Comma> to zero.
 
-=head1 OPTIONAL EXPORTS
+=head1 VARIABLES
 
-    use List::ToHumanString qw/h humanize/;
+=head2 C<$List::ToHumanString::Separator>
 
-    printf "Report(s) for %s.\n", humanize qw/March May June August/;
-    ## prints: Report(s) for March, May, June, and August.
+    my @items = ( 1..10 );
+    $List::ToHumanString::Separator = '::SEP::';
+    print to_human_string "I have {one item::SEP::many items} {foo|bar}\n", @items;
+    ## Prints "I have many items {foo|bar}"
 
-    printf "Report(s) for %s.\n", h qw/March May/;
-    ## prints: Report(s) for March and May.
+B<Takes> any non-empty string as a value.
+B<Specifies> what separator to use between the "singular" and "plural" texts
+in the string given to C<to_human_string()>.
+B<Defaults to:> C<|> (a pipe character)
+    
+=head2 C<$List::ToHumanString::Extra_Comma>
 
-=head2 C<humanize>
+    $List::ToHumanString::Extra_Comma = 0;
+    to_human_string('|list|', 'foo', 'bar', 'ber', 'baz');
+    # returns 'foo, bar, ber and baz'
 
-    printf "Report(s) for %s.\n", humanize qw/March May June August/;
-
-You can optionally import C<humanize()> and use it instead of
-C<to_human_string()>, to save on typing.
-
-=head2 C<h>
-
-    printf "Report(s) for %s.\n", h qw/March May June August/;
-
-You can optionally import C<h()> and use it instead of
-C<to_human_string()>, to save on typing.
-
+B<Takes> true or false values as a value.
+B<Specifies> whether to use a comma after the penultimate element in the 
+list when using C<to_human_string()> to insert humanized list into the
+string. If set to a true value, the comma
+will be used. B<Defaults to:> C<1> (true value).
+    
 =head1 AUTHOR
 
 Zoffix Znet, C<< <zoffix at cpan.org> >>

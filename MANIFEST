@@ -5,11 +5,12 @@ MANIFEST
 README
 LICENSE
 t/00-load.t
-t/01-humanize-default-export.t
-t/02-humanize-extra-export.t
+t/01-humanize-list-only.t
+t/02-pluralize.t
 xt/kwalitee.t
 xt/pod-coverage.t
 xt/pod.t
+examples/humanize.pl
 Makefile.PL
 META.yml
 META.json

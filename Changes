@@ -1,5 +1,13 @@
 Revision history for List-ToHumanString
 
+1.001   2013-12-04
+        - COMPLETELY CHANGED FUNCTIONALITY FROM PREVIOUS RELEASE!!
+          Removed h() nad humanize(). Changed what to_human_string() does.
+        - Upped the version way higher, based on feedback and because
+          the interface is now solidified
+        - Added examples/humanize.pl
+        - Fixed POD typos
+
 0.004   2013-12-01
         - Fixed a typo
 
