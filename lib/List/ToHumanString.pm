@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '1.001';
+our $VERSION = '1.002';
 require Exporter;
 our @ISA         = qw(Exporter);
 our @EXPORT      = qw(to_human_string);
@@ -35,7 +35,7 @@ sub _combine_list_to_string {
 
 sub to_human_string {
     my ( $string, @list ) = @_;
-    
+
     @list = grep defined && /\S/, @list;
 
     my $replacement_index = ( @list == 1 ? 0 : 1 );
@@ -51,7 +51,7 @@ sub to_human_string {
         my $human_list = _combine_list_to_string( @list );
         $string =~ s/$re/$human_list/g;
     }
-    
+
     return $string;
 }
 
@@ -83,7 +83,13 @@ List::ToHumanString - write lists in strings like a human would
 
 Provides a way to make it easy to prepare a string containing
 a list of items, where that string is meant to be read by a human.
-    
+
+=head1 SEE ALSO
+
+L<Lingua::Conjunction> -- You might find L<Lingua::Conjunction>
+more apt at joining the list of things, if that's the only
+thing that you're after.
+
 =head1 EXPORTS BY DEFAULT
 
 =head2 C<to_human_string>
@@ -106,7 +112,7 @@ a list of items, where that string is meant to be read by a human.
     ## Prints "I have many items: Foo, Bar and Baz" (note the missing comma before "and")
 
 B<Exported by default>. B<Takes> a string to "humanize" as the first argument
-and a list of items to use. 
+and a list of items to use.
 B<Removes all undefs and empty and blank strings> before counting the
 number of items in the list. If the list contains one item, chooses the
 "singular" variation in the first argument's format (see below). If the list
@@ -201,7 +207,7 @@ B<Takes> any non-empty string as a value.
 B<Specifies> what separator to use between the "singular" and "plural" texts
 in the string given to C<to_human_string()>.
 B<Defaults to:> C<|> (a pipe character)
-    
+
 =head2 C<$List::ToHumanString::Extra_Comma>
 
     $List::ToHumanString::Extra_Comma = 0;
@@ -209,11 +215,11 @@ B<Defaults to:> C<|> (a pipe character)
     # returns 'foo, bar, ber and baz'
 
 B<Takes> true or false values as a value.
-B<Specifies> whether to use a comma after the penultimate element in the 
+B<Specifies> whether to use a comma after the penultimate element in the
 list when using C<to_human_string()> to insert humanized list into the
 string. If set to a true value, the comma
 will be used. B<Defaults to:> C<1> (true value).
-    
+
 =head1 AUTHOR
 
 Zoffix Znet, C<< <zoffix at cpan.org> >>

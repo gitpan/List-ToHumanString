@@ -1,5 +1,9 @@
 Revision history for List-ToHumanString
 
+1.002   2013-12-05
+        - Added a reference to Lingua::Conjunction, after its author
+          pointed out to me that such a thing exists.
+
 1.001   2013-12-04
         - COMPLETELY CHANGED FUNCTIONALITY FROM PREVIOUS RELEASE!!
           Removed h() nad humanize(). Changed what to_human_string() does.

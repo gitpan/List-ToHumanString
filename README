@@ -17,6 +17,10 @@ DESCRIPTION
     Provides a way to make it easy to prepare a string containing a list of
     items, where that string is meant to be read by a human.
 
+SEE ALSO
+    Lingua::Conjunction -- You might find Lingua::Conjunction more apt at
+    joining the list of things, if that's the only thing that you're after.
+
 EXPORTS BY DEFAULT
   "to_human_string"
         print to_human_string "Report{|s} for |list|\n", qw/March May July/;
